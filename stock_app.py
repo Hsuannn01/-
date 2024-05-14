@@ -39,7 +39,7 @@ def load_data(url):
 
 df_original = load_data('kbars_2330_2022-01-01-2022-11-18.pkl')
 
-df_original = pd.read_pickle('kbars_2330_2022-01-01-2022-11-18.pkl')
+#df_original = pd.read_pickle('kbars_2330_2022-01-01-2022-11-18.pkl')
 
 #df.columns  ## Index(['Unnamed: 0', 'time', 'open', 'low', 'high', 'close', 'volume','amount'], dtype='object')
 df_original = df_original.drop('Unnamed: 0',axis=1)
