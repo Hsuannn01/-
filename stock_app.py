@@ -141,8 +141,8 @@ elif cycle_duration_unit == '週':
 else:
         cycle_duration_minutes = cycle_duration_value
     
-    # 更新K棒
-    tag = KBar.AddPrice(time, open_price, close_price, low_price, high_price, qty, cycle_duration_minutes)
+# 更新K棒
+tag = KBar.AddPrice(time, open_price, close_price, low_price, high_price, qty, cycle_duration_minutes)
 ############################################
 
 cycle_duration = int(cycle_duration)
