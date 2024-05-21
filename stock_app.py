@@ -130,7 +130,7 @@ cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分�
 ############################################
 #下拉式選擇小時、分鐘
 cycle_duration_value = st.number_input('輸入一根 K 棒的時間數值', value=24, key="KBar_duration_value")
-cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=['小時', '分鐘'], key="KBar_duration_unit")
+cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=['週','日','小時', '分鐘'], key="KBar_duration_unit")
 
 if cycle_duration_unit == '小時':
         cycle_duration_minutes = cycle_duration_value * 60
