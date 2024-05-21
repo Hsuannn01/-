@@ -134,8 +134,14 @@ cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=
 
 if cycle_duration_unit == '小時':
     cycle_duration = cycle_duration_value * 60
+elif:
+	cycle_duration_unit == '日':
+	cycle_duration = cycle_duration_value * 60*24
+elif:
+	cycle_duration_unit == '週':
+	cycle_duration = cycle_duration_value * 60*24*7
 else:
-    cycle_duration = cycle_duration_value
+    cycle_duration = cycle_duration_value #分鐘
 
 # 使用選擇的時間長度來計算 KBar
 KBar = indicator_forKBar_short.KBar(Date, cycle_duration)  ## 設定cycle_duration可以改成你想要的 KBar 週期
