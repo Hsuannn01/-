@@ -134,10 +134,10 @@ cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=
 
 if cycle_duration_unit == '小時':
     cycle_duration = cycle_duration_value * 60
-elif:
+elif
 	cycle_duration_unit == '日':
 	cycle_duration = cycle_duration_value * 60*24
-elif:
+elif
 	cycle_duration_unit == '週':
 	cycle_duration = cycle_duration_value * 60*24*7
 else:
