@@ -39,7 +39,7 @@ def load_data(url):
 
 df_original = load_data('kbars_2330_2022-01-01-2022-11-18.pkl')
 
-#df_original = pd.read_pickle('kbars_2330_2022-01-01-2022-11-18.pkl')
+df_original = pd.read_pickle('kbars_2330_2022-01-01-2022-11-18.pkl')
 
 #df.columns  ## Index(['Unnamed: 0', 'time', 'open', 'low', 'high', 'close', 'volume','amount'], dtype='object')
 df_original = df_original.drop('Unnamed: 0',axis=1)
@@ -58,6 +58,7 @@ start_date = st.text_input('選擇開始日期 (日期格式: 2022-01-03)', '202
 end_date = st.text_input('選擇結束日期 (日期格式: 2022-11-18)', '2022-11-18')
 start_date = datetime.datetime.strptime(start_date,'%Y-%m-%d')
 end_date = datetime.datetime.strptime(end_date,'%Y-%m-%d')
+
 # 使用条件筛选选择时间区间的数据
 df = df_original[(df_original['time'] >= start_date) & (df_original['time'] <= end_date)]
 
@@ -116,10 +117,21 @@ KBar_dic['amount']=np.array(KBar_amount_list)
 # Close_array = np.array([])
 # Volume_array = np.array([])
 
-Date = start_date.strftime("%Y-%m-%d")
 
+Date = start_date.strftime("%Y-%m-%d")
 st.subheader("設定一根 K 棒的時間長度(分鐘)")
-cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', key="KBar_duration")
+#cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', value=1440, key="KBar_duration")
+
+#####新增下拉式選單#### #st.selectbox
+import streamlit as st
+
+cycle_duration = st.selectbox( "設定一根 K 棒的時間長度 (單位:日, 週, 月) ", 
+                              ['日', '周', '月'])
+##如何設定後台數值???
+############################################
+
+
+
 cycle_duration = int(cycle_duration)
 #cycle_duration = 1440   ## 可以改成你想要的 KBar 週期
 #KBar = indicator_f_Lo2.KBar(Date,'time',2)
