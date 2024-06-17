@@ -63,18 +63,26 @@ KBar_dic['amount'] = np.array(KBar_amount_list)
 
 ###### (3) 改變 KBar 時間長度 ########
 Date = start_date.strftime("%Y-%m-%d")
-st.subheader("設定一根 K 棒的時間長度(分鐘)")
-cycle_duration_value = st.number_input('輸入一根 K 棒的時間數值', value=24, key="KBar_duration_value")
-cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=['週', '日', '小時', '分鐘'], key="KBar_duration_unit")
+st.subheader("設定一根 K 棒的時間長度")
 
-if cycle_duration_unit == '小時':
-    cycle_duration_minutes = cycle_duration_value * 60
-elif cycle_duration_unit == '日':
-    cycle_duration_minutes = cycle_duration_value * 60 * 24
-elif cycle_duration_unit == '週':
-    cycle_duration_minutes = cycle_duration_value * 60 * 24 * 7
-else:
-    cycle_duration_minutes = cycle_duration_value
+cycle_duration_option = st.selectbox('選擇一根 K 棒的時間長度', options=[
+    '5 分鐘', '10 分鐘', '15 分鐘', '30 分鐘', '1 小時', '2 小時', '4 小時', '1 日', '1 週'
+])
+
+# 根据选择的选项自动转换成分钟数值
+cycle_duration_minutes_mapping = {
+    '5 分鐘': 5,
+    '10 分鐘': 10,
+    '15 分鐘': 15,
+    '30 分鐘': 30,
+    '1 小時': 60,
+    '2 小時': 120,
+    '4 小時': 240,
+    '1 日': 1440,
+    '1 週': 10080
+}
+
+cycle_duration_minutes = cycle_duration_minutes_mapping[cycle_duration_option]
 
 KBar = indicator_forKBar_short.KBar(Date, cycle_duration_minutes)
 
@@ -150,10 +158,7 @@ with st.expander("K線圖, 移動平均線"):
     #### include a go.Bar trace for volumes
     fig1.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
     fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MA_long'][last_nan_index_MA+1:], mode='lines', line=dict(color='orange', width=2), name=f'{LongMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
-    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MA_short'][last_nan_index_MA+1:], mode='lines', line=dict(color='pink', width=2), name=f'{ShortMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
-    
-    fig1.layout
-
+    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:],
 
 
 
