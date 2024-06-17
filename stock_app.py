@@ -158,8 +158,7 @@ with st.expander("K線圖, 移動平均線"):
     #### include a go.Bar trace for volumes
     fig1.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
     fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MA_long'][last_nan_index_MA+1:], mode='lines', line=dict(color='orange', width=2), name=f'{LongMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
-    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:],
-
+    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1
 
 
 
