@@ -117,9 +117,34 @@ KBar_dic['amount']=np.array(KBar_amount_list)
 # Volume_array = np.array([])
 
 Date = start_date.strftime("%Y-%m-%d")
-
 st.subheader("設定一根 K 棒的時間長度(分鐘)")
-cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', key="KBar_duration")
+cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', value=1440, key="KBar_duration")
+
+
+#####新增下拉式選單#### #st.selectbox
+
+#import streamlit as st
+
+#option = st.selectbox( "設定一根 K 棒的時間長度", ("以 日 為單位", "以 週 為單位", "以 月 為單位"))
+
+############################################
+#下拉式選擇小時、分鐘
+cycle_duration_value = st.number_input('輸入一根 K 棒的時間數值', value=24, key="KBar_duration_value")
+cycle_duration_unit = st.selectbox('選擇一根 K 棒的時間單位', options=['週','日','小時', '分鐘'], key="KBar_duration_unit")
+
+if cycle_duration_unit == '小時':
+        cycle_duration_minutes = cycle_duration_value * 60
+elif cycle_duration_unit == '日':
+        cycle_duration_minutes = cycle_duration_value * 60 * 24
+elif cycle_duration_unit == '週':
+        cycle_duration_minutes = cycle_duration_value * 60 * 24 * 7
+else:
+        cycle_duration_minutes = cycle_duration_value
+    
+# 更新K棒
+tag = KBar.AddPrice(time, open_price, close_price, low_price, high_price, qty, cycle_duration_minutes)
+############################################
+
 cycle_duration = int(cycle_duration)
 #cycle_duration = 1440   ## 可以改成你想要的 KBar 週期
 #KBar = indicator_f_Lo2.KBar(Date,'time',2)
@@ -308,4 +333,3 @@ with st.expander("K線圖, 長短 RSI"):
     
     fig2.layout.yaxis2.showgrid=True
     st.plotly_chart(fig2, use_container_width=True)
-
