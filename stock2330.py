@@ -119,4 +119,5 @@ KBar_df['RSI_long'] = calculate_rsi(KBar_df, LongRSIPeriod)
 KBar_df['RSI_short'] = calculate_rsi(KBar_df, ShortRSIPeriod)
 KBar_df['RSI_Middle'] = np.array([50] * len(KBar_dic['time']))
 
-last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].
+last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].apply(pd.isna)][0]
+
