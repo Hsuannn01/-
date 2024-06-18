@@ -1,3 +1,4 @@
+import twstock
 import os
 import numpy as np
 import datetime
@@ -24,7 +25,6 @@ def load_data(url):
     return df 
 
 df_original = load_data('all_stock_data.pkl')
-df_original = df_original.drop('Unnamed: 0', axis=1)
 
 ##### 選擇資料區間
 st.subheader("選擇開始與結束的日期, 區間:2024-01-01 至 2024-06-18")
@@ -119,36 +119,4 @@ KBar_df['RSI_long'] = calculate_rsi(KBar_df, LongRSIPeriod)
 KBar_df['RSI_short'] = calculate_rsi(KBar_df, ShortRSIPeriod)
 KBar_df['RSI_Middle'] = np.array([50] * len(KBar_dic['time']))
 
-last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].apply(pd.isna)][0]
-
-###### (5) 將 Dataframe 欄位名稱轉換  ######
-KBar_df.columns = [i[0].upper() + i[1:] for i in KBar_df.columns]
-
-###### (6) 畫圖 ######
-st.subheader("畫圖")
-
-##### K線圖, 移動平均線 MA
-with st.expander("K線圖, 移動平均線"):
-    fig1 = make_subplots(specs=[[{"secondary_y": True}]])
-    fig1.add_trace(go.Candlestick(x=KBar_df['Time'],
-                    open=KBar_df['Open'], high=KBar_df['High'],
-                    low=KBar_df['Low'], close=KBar_df['Close'], name='K線'),
-                   secondary_y=True)
-    fig1.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
-    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MA_long'][last_nan_index_MA+1:], mode='lines', line=dict(color='orange', width=2), name=f'{LongMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
-    fig1.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MA_short'][last_nan_index_MA+1:], mode='lines', line=dict(color='pink', width=2), name=f'{ShortMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
-    fig1.layout.yaxis2.showgrid=True
-    st.plotly_chart(fig1, use_container_width=True)
-
-##### K線圖, RSI
-with st.expander("K線圖, 長短 RSI"):
-    fig2 = make_subplots(specs=[[{"secondary_y": True}]])
-    fig2.add_trace(go.Candlestick(x=KBar_df['Time'],
-                    open=KBar_df['Open'], high=KBar_df['High'],
-                    low=KBar_df['Low'], close=KBar_df['Close'], name='K線'),
-                   secondary_y=True)
-    fig2.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_RSI+1:], y=KBar_df['RSI_long'][last_nan_index_RSI+1:], mode='lines', line=dict(color='blue', width=2), name=f'{LongRSIPeriod}-根 K棒 RSI 長線'), secondary_y=True)
-    fig2.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_RSI+1:], y=KBar_df['RSI_short'][last_nan_index_RSI+1:], mode='lines', line=dict(color='red', width=2), name=f'{ShortRSIPeriod}-根 K棒 RSI 短線'), secondary_y=True)
-    fig2.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['RSI_Middle'], mode='lines', line=dict(color='grey', width=1, dash='dot'), name='RSI 中線'), secondary_y=True)
-    fig2.layout.yaxis2.showgrid=True
-    st.plotly_chart(fig2, use_container_width=True)
+last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].
