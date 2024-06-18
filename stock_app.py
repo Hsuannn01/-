@@ -2,17 +2,19 @@ import os
 import numpy as np
 import datetime
 import pandas as pd
-import streamlit as st 
-import streamlit.components.v1 as stc 
+import streamlit as st
+import streamlit.components.v1 as stc
 import indicator_forKBar_short
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 ###### (1) 開始設定 ######
 html_temp = """
-		<div style="background-color:#3872fb;padding:10px;border-radius:10px">
-		<h1 style="color:white;text-align:center;">金融資料視覺化呈現 (金融看板) </h1>
-		<h2 style="color:white;text-align:center;">Financial Dashboard </h2>
-		</div>
-		"""
+    <div style="background-color:#3872fb;padding:10px;border-radius:10px">
+    <h1 style="color:white;text-align:center;">金融資料視覺化呈現 (金融看板) </h1>
+    <h2 style="color:white;text-align:center;">Financial Dashboard </h2>
+    </div>
+    """
 stc.html(html_temp)
 
 ## 读取Pickle文件
@@ -22,7 +24,6 @@ def load_data(url):
     return df 
 
 df_original = load_data('kbars_2330_2022-01-01-2022-11-18.pkl')
-
 df_original = df_original.drop('Unnamed: 0', axis=1)
 
 ##### 選擇資料區間
@@ -49,17 +50,22 @@ KBar_dic['amount'] = np.array(list(KBar_dic['amount'].values()))
 ######  (3) 改變 KBar 時間長度 (以下)  ########
 Date = start_date.strftime("%Y-%m-%d")
 st.subheader("設定一根 K 棒的時間長度(單位: 日, 週, 月)")
-cycle_duration = st.selectbox("設定一根 K 棒的時間長度", ['日', '周', '月'])
+cycle_duration = st.selectbox("設定一根 K 棒的時間長度", ['日', '週', '月'])
 
 # 根據選擇的周期設定 KBar 週期
 if cycle_duration == '日':
     cycle_duration = 1440  # 1 日
-elif cycle_duration == '周':
+elif cycle_duration == '週':
     cycle_duration = 1440 * 5  # 1 週
 elif cycle_duration == '月':
     cycle_duration = 1440 * 21  # 1 月
 
 KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
+
+# 確認資料時間範圍和格式
+print(f"Start date: {start_date}, End date: {end_date}")
+print(f"Data time range: {KBar_dic['time'][0]} to {KBar_dic['time'][-1]}")
+print(f"Cycle duration: {cycle_duration}")
 
 for i in range(KBar_dic['time'].size):
     time = KBar_dic['time'][i]
@@ -73,7 +79,7 @@ for i in range(KBar_dic['time'].size):
 
 ###### 形成 KBar 字典 (新週期的)
 KBar_dic = {}
-KBar_dic['time'] = KBar.TAKBar['time']   
+KBar_dic['time'] = KBar.TAKBar['time']
 KBar_dic['product'] = np.repeat('tsmc', KBar_dic['time'].size)
 KBar_dic['open'] = KBar.TAKBar['open']
 KBar_dic['high'] = KBar.TAKBar['high']
@@ -115,13 +121,11 @@ KBar_df['RSI_Middle'] = np.array([50] * len(KBar_dic['time']))
 
 last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].apply(pd.isna)][0]
 
-###### (5) 將 Dataframe 欄位名稱轉換  ###### 
+###### (5) 將 Dataframe 欄位名稱轉換  ######
 KBar_df.columns = [i[0].upper() + i[1:] for i in KBar_df.columns]
 
 ###### (6) 畫圖 ######
 st.subheader("畫圖")
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 ##### K線圖, 移動平均線 MA
 with st.expander("K線圖, 移動平均線"):
